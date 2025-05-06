@@ -6,6 +6,7 @@ import { authorizeRoles } from "../middleware/roleMiddleware.js";
 
 
 
+
 const router = express.Router();
 
 // Admin and Staff can create residents

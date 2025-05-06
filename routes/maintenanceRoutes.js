@@ -7,6 +7,7 @@ import { authorizeRoles } from '../middleware/roleMiddleware.js';
 
 
 
+
 const router = express.Router();
 
 router.post("/create",protect, authorizeRoles('resident'),createRequest); 

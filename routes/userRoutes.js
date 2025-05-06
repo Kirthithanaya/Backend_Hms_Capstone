@@ -1,7 +1,8 @@
 import express from "express";
 import { deleteUser, getAllUsers, updateUserRole } from "../controllers/userController.js";
-import { protect } from "../middleware/authMiddleware.js";
+import {  protect } from "../middleware/authMiddleware.js";
 import { authorizeRoles } from "../middleware/roleMiddleware.js";
+
 
 
 
