@@ -5,13 +5,13 @@ import connectDB from "./Database/dbConfig.js";
 import authRoute from "./routes/authRoutes.js";
 import roomRoute from "./routes/roomRoutes.js";
 import residentRoute from "./routes/residentRoutes.js";
-import maintenanceRoute from "./routes/maintenanceRoutes.js";
 import billingRoute from "./routes/billingRoutes.js";
 import financialRoute from "./routes/financialRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import integrationRoutes from "./routes/integrationRoutes.js"
 import notificationRoute from "./routes/notificationRoutes.js"
 import smsRoutes from "./routes/smsRoutes.js";
+import maintenanceRoutes from "./routes/maintenanceRoutes.js";
 
 
 dotenv.config();
@@ -28,13 +28,13 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authRoute);
 app.use("/api/rooms", roomRoute);
 app.use("/api/residents", residentRoute);
-app.use("/api/maintenance", maintenanceRoute);
 app.use("/api/billing", billingRoute);
 app.use("/api/financial", financialRoute);
 app.use("/api/users", userRoutes);
 app.use("/api/integration", integrationRoutes);
 app.use("/api/notifications", notificationRoute);
 app.use("/api/sms", smsRoutes);
+app.use("/api/maintenance", maintenanceRoutes);
 
 
 const port = process.env.PORT || 4000;
