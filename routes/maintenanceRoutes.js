@@ -1,5 +1,5 @@
 import express from 'express';
-import { assignRequest, createRequest,    deleteMaintenanceRequest,    getAllRequests, getMyRequests, updateStatus } from '../controllers/maintenanceController.js';
+import { assignRequest,     createRequest,     deleteMaintenanceRequest,    getAllRequests, getMyRequests, updateStatus } from '../controllers/maintenanceController.js';
 import { authenticate, protect } from '../middleware/authMiddleware.js';
 import { authorizeRoles } from '../middleware/roleMiddleware.js';
 
@@ -7,7 +7,7 @@ import { authorizeRoles } from '../middleware/roleMiddleware.js';
 
 const router = express.Router();
 
-router.post('/create', protect,authenticate,('resident'), createRequest);
+router.post("/create",protect,authorizeRoles('resident'),createRequest); 
 router.get('/my-requests', protect, authorizeRoles('resident'), getMyRequests);
 
 router.get('/all', protect, authorizeRoles('admin', 'staff'), getAllRequests);
