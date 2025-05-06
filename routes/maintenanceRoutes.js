@@ -7,7 +7,7 @@ import { authorizeRoles } from '../middleware/roleMiddleware.js';
 
 const router = express.Router();
 
-router.post('/create', protect,authenticate, authorizeRoles('resident'), createRequest);
+router.post('/create', protect,authenticate,('resident'), createRequest);
 router.get('/my-requests', protect, authorizeRoles('resident'), getMyRequests);
 
 router.get('/all', protect, authorizeRoles('admin', 'staff'), getAllRequests);
