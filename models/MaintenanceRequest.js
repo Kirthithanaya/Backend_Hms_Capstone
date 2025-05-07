@@ -1,36 +1,32 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const maintenanceRequestSchema = new mongoose.Schema({
-  resident: {
+  residentId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
+    ref: "User",
+    required: true,
   },
-  issue: {
-    type: String,
-    required: true
-  },
-  priority: {
-    type: String,
-    enum: ['low', 'medium', 'high'],
-    default: 'medium'
-  },
+  issueTitle: { type: String, required: true },
+  issueDescription: { type: String, required: true },
+  priority: { type: String, enum: ["Low", "Medium", "High"], required: true },
   status: {
     type: String,
-    enum: ['pending', 'in progress', 'resolved'],
-    default: 'pending'
+    enum: ["Pending", "In Progress", "Resolved"],
+    default: "Pending",
   },
-  assignedTo: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    default: null
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
-  },
-  updatedAt: Date
+  assignedTo: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  updates: [
+    {
+      date: { type: Date, default: Date.now },
+      status: String,
+      message: String,
+    },
+  ],
+  createdAt: { type: Date, default: Date.now },
 });
 
-const MaintenanceRequest = mongoose.model('MaintenanceRequest', maintenanceRequestSchema);
+const MaintenanceRequest = mongoose.model(
+  "MaintenanceRequest",
+  maintenanceRequestSchema
+);
 export default MaintenanceRequest;

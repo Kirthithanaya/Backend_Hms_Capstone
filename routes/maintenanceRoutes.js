@@ -1,23 +1,19 @@
-import express from 'express';
-import { assignRequest,     createRequest,     deleteMaintenanceRequest,    getAllRequests, getMyRequests, updateStatus } from '../controllers/maintenanceController.js';
-import { authenticate, protect } from '../middleware/authMiddleware.js';
-import { authorizeRoles } from '../middleware/roleMiddleware.js';
+import expresss from "express";
+import { adminOrStaff, protect } from "../middleware/authMiddleware.js";
+import { assignRequest, createRequest, getAllRequests, getResidentRequests, updateRequestStatus } from './../controllers/maintenanceController.js';
+   
 
 
 
 
+const router = expresss.Router();
+
+router.post('/', protect, createRequest);
+router.get('/my', protect, getResidentRequests);
+router.get('/', protect, adminOrStaff, getAllRequests);
+router.put('/assign', protect, adminOrStaff, assignRequest);
+router.put('/:requestId/status', protect,adminOrStaff, updateRequestStatus);
 
 
-const router = express.Router();
-
-router.post("/create",protect, authorizeRoles('resident'),createRequest); 
-router.get('/my-requests', protect, authorizeRoles('resident'), getMyRequests);
-
-router.get('/all', protect, authorizeRoles('admin', 'staff'), getAllRequests);
-router.put('/assign/:requestId', protect, authorizeRoles('admin', 'staff'), assignRequest);
-router.put('/status/:requestId', protect,authorizeRoles('admin', 'staff'), updateStatus);
-// 🔹 Delete request (Admin or Resident who created it)
-router.delete("/delete/:id", authenticate, deleteMaintenanceRequest);
 
 export default router;
-

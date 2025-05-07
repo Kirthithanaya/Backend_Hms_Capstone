@@ -51,7 +51,10 @@ export const verifyRole = (roles) => {
   };
 };
 
-
+export const adminOrStaff = (req, res, next) => {
+  if (['admin', 'staff'].includes(req.user.role)) next();
+  else res.status(403).json({ error: 'Forbidden' });
+};
 
 
 

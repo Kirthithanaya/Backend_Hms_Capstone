@@ -1,100 +1,72 @@
-import MaintenanceRequest from "../models/MaintenanceRequest.js";
+ import MaintenanceRequest from "../models/MaintenanceRequest.js"; 
 
-// 🔹 Resident submits request
+// Submit a new request
 export const createRequest = async (req, res) => {
   try {
-    const { issue, priority } = req.body;
+    const { issueTitle, issueDescription, priority } = req.body;
     const request = new MaintenanceRequest({
-      resident: req.user.id,
-      issue,
+      residentId: req.user.id,
+      issueTitle,
+      issueDescription,
       priority
     });
     await request.save();
     res.status(201).json({ message: 'Request submitted', request });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: 'Server error' });
   }
 };
 
-// 🔹 Staff/Admin get all requests
+// Get all requests (for staff/admin)
 export const getAllRequests = async (req, res) => {
   try {
-    const requests = await MaintenanceRequest.find()
-      .populate('resident', 'name email')
-      .populate('assignedTo', 'name');
+    const requests = await MaintenanceRequest.find().populate('residentId assignedTo', 'name email');
     res.json(requests);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: 'Server error' });
   }
 };
 
-// 🔹 Staff/Admin assign request
+// Get requests for a resident
+export const getResidentRequests = async (req, res) => {
+  try {
+    const requests = await MaintenanceRequest.find({ residentId: req.user.id });
+    res.json(requests);
+  } catch (err) {
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
+// Assign a request to staff
 export const assignRequest = async (req, res) => {
   try {
-    const { requestId } = req.params;
-    const { adminId } = req.body;
-
+    const { requestId, staffId } = req.body;
     const request = await MaintenanceRequest.findByIdAndUpdate(
       requestId,
-      { assignedTo: adminId, status: 'in progress', updatedAt: new Date() }, // { assignedTo: adminId, status: 'in progress', updatedAt: new Date() },
+      { assignedTo: staffId, status: 'In Progress' },
       { new: true }
     );
-    res.json({ message: 'Assigned successfully', request });
+    res.json({ message: 'Request assigned', request });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: 'Server error' });
   }
 };
 
-// 🔹 Staff/Admin update status
-export const updateStatus = async (req, res) => {
+// Update request status
+export const updateRequestStatus = async (req, res) => {
   try {
     const { requestId } = req.params;
-    const { status } = req.body;
+    const { status, message } = req.body;
 
-    const request = await MaintenanceRequest.findByIdAndUpdate(
-      requestId,
-      { status, updatedAt: new Date() },
-      { new: true }
-    );
+    const request = await MaintenanceRequest.findById(requestId);
+    if (!request) return res.status(404).json({ error: 'Request not found' });
+
+    request.status = status;
+    request.updates.push({ status, message });
+    await request.save();
+
     res.json({ message: 'Status updated', request });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: 'Server error' });
   }
 };
-
-// 🔹 Resident sees own requests
-export const getMyRequests = async (req, res) => {
-  try {
-    const requests = await MaintenanceRequest.find({ resident: req.user.id });
-    res.json(requests);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
-
-
-
-// 🔹 Delete Maintenance Request (Admin or assigned Staff only)
-export const deleteMaintenanceRequest = async (req, res) => {
-    try {
-      const request = await MaintenanceRequest.findById(req.params.id);
-      if (!request) {
-        return res.status(404).json({ message: "Request not found" });
-      }
-  
-      // Optional role-based check:
-      if (
-        req.user.role !== "admin" &&
-        req.user.role !== "staff" &&
-        request.resident.toString() !== req.user.id
-      ) {
-        return res.status(403).json({ message: "Unauthorized" });
-      }
-  
-      await MaintenanceRequest.findByIdAndDelete(req.params.id);
-  
-      res.status(200).json({ message: "Maintenance request deleted successfully" });
-    } catch (error) {
-      res.status(500).json({ message: "Server error", error: error.message });
-    }
-  };
