@@ -8,11 +8,11 @@ import { assignRequest, createRequest, getAllRequests, getResidentRequests, upda
 
 const router = expresss.Router();
 
-router.post('/', protect, createRequest);
-router.get('/my', protect, getResidentRequests);
-router.get('/', protect, adminOrStaff, getAllRequests);
+router.post('/create', protect, createRequest);
+router.get('/my-requests', protect, getResidentRequests);
+router.get('/all', protect, adminOrStaff, getAllRequests);
 router.put('/assign', protect, adminOrStaff, assignRequest);
-router.put('/:requestId/status', protect,adminOrStaff, updateRequestStatus);
+router.put('/status/:requestId', protect,adminOrStaff, updateRequestStatus);
 
 
 
