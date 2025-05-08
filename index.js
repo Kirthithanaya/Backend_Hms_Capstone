@@ -18,7 +18,7 @@ dotenv.config();
 
 const app = express();
 app.use(express.json());
-app.use(cors({origin:"https://frontend-hms-capstone-6esy.vercel.app/"}));
+app.use(cors({origin:"https://frontend-hms-capstone-6esy.vercel.app"}));
 connectDB();
 
 app.get("/", (req, res) => {
