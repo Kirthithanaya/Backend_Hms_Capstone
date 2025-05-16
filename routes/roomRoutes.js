@@ -19,4 +19,3 @@ router.post("/check-out", authenticate, authorizeRoles("admin", "staff"), checkO
 router.delete("/delete-room/:roomNumber", authenticate, authorizeRoles("admin"), deleteRoom);  // Only admin can delete rooms
 
 export default router;
-Added
