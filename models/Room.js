@@ -34,7 +34,12 @@ const roomSchema = new mongoose.Schema(
     isOccupied: {
       type: Boolean,
       default: false,
-    }
+    },
+     assignedTo: {
+    residentId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null },
+    checkInDate: { type: Date },
+    checkOutDate: { type: Date }
+  }
   },
   { timestamps: true }
 );

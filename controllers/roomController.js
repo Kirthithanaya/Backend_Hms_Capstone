@@ -50,19 +50,16 @@ export const assignRoom = async (req, res) => {
   }
 };
 
-// 🔹 Get All Rooms (Admin only)
+// GET all rooms (for admin, staff, resident)
 export const getAllRooms = async (req, res) => {
   try {
-    if (req.user.role !== "admin") {
-      return res.status(403).json({ message: "Forbidden: Only admin can view all rooms" });
-    }
-
-    const rooms = await Room.find();
+    const rooms = await Room.find().populate('assignedTo.residentId', 'name email');
     res.status(200).json(rooms);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ message: 'Failed to fetch rooms', error });
   }
 };
+
 
 // 🔹 Check In Resident (Admin and Staff)
 export const checkInResident = async (req, res) => {
